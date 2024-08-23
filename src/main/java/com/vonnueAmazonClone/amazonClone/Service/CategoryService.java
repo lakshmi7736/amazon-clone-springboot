@@ -1,0 +1,10 @@
+package com.vonnueAmazonClone.amazonClone.Service;
+
+import com.vonnueAmazonClone.amazonClone.DTO.CategoryDto;
+
+
+public interface CategoryService {
+     CategoryDto saveCategory(CategoryDto categoryDto);
+     CategoryDto updateCategory(Long id, CategoryDto categoryDto);
+
+}
