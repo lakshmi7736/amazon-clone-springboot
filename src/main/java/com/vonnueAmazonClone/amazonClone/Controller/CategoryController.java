@@ -1,6 +1,8 @@
 package com.vonnueAmazonClone.amazonClone.Controller;
 
 import com.vonnueAmazonClone.amazonClone.DTO.CategoryDto;
+import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
+import com.vonnueAmazonClone.amazonClone.Model.User;
 import com.vonnueAmazonClone.amazonClone.Service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +22,40 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    // Endpoint to create an existing category
     @PostMapping
-    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto) {
-        CategoryDto savedCategory = categoryService.saveCategory(categoryDto);
-        return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
+    public ResponseEntity<?> createCategory(@RequestBody CategoryDto categoryDto) {
+           try{
+               CategoryDto savedCategory = categoryService.saveCategory(categoryDto);
+               return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
+           }catch (  InvalidDetailException e) {
+               return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+           }
+
     }
 
+
+    // Endpoint to update an existing category
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDto> updateCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto) {
         try {
             CategoryDto updatedCategory = categoryService.updateCategory(id, categoryDto);
             return ResponseEntity.ok(updatedCategory);
+        } catch (InvalidDetailException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // Endpoint to delete an existing category
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteSeller(@PathVariable Long id) {
+        try {
+            categoryService.deleteCategory(id);
+            return ResponseEntity.ok().build();
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

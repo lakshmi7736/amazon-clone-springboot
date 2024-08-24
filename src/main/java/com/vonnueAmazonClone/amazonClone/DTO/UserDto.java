@@ -1,6 +1,5 @@
 package com.vonnueAmazonClone.amazonClone.DTO;
 
-import com.vonnueAmazonClone.amazonClone.Model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,14 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDto {
-
+public class UserDto {
     private Long id;
-
-    private String name;
-
-    private String image;
-
-    private User adminId;
-
+    private String email;
 }

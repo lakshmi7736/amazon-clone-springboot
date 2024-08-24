@@ -1,34 +1,32 @@
 package com.vonnueAmazonClone.amazonClone.Controller;
 
-import com.vonnueAmazonClone.amazonClone.DTO.SellerDto;
-import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
-import com.vonnueAmazonClone.amazonClone.Model.Seller;
-import com.vonnueAmazonClone.amazonClone.Service.SellerService;
 
+import com.vonnueAmazonClone.amazonClone.DTO.UserDto;
+import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
+import com.vonnueAmazonClone.amazonClone.Model.User;
+import com.vonnueAmazonClone.amazonClone.Service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
-@RequestMapping("/api/sellers")
-public class SellerController {
-
-    private final SellerService sellerService;
+@RequestMapping("/api/users")
+public class UserController {
+    private final UserService userService;
 
     @Autowired
-    public SellerController(SellerService sellerService) {
-        this.sellerService = sellerService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     // Endpoint to save a new seller
     @PostMapping
-    public ResponseEntity<?> createSeller(@RequestBody SellerDto sellerDto) {
+    public ResponseEntity<?> createUser(@RequestBody UserDto userDto) {
         try{
-            Seller savedSeller = sellerService.saveSeller(sellerDto);
-            return new ResponseEntity<>(savedSeller, HttpStatus.CREATED);
+            User savedUser = userService.saveUser(userDto);
+            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
         }catch (InvalidDetailException e) {
             // Return an error response entity with the exception message
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -38,10 +36,10 @@ public class SellerController {
 
     // Endpoint to update an existing seller
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateSeller(@PathVariable Long id, @RequestBody SellerDto sellerDto) {
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
         try{
-            Seller updatedSeller = sellerService.updateSeller(id, sellerDto);
-            return ResponseEntity.ok(updatedSeller);
+            User updatedUser = userService.updateUser(id, userDto);
+            return ResponseEntity.ok(updatedUser);
         }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -49,9 +47,9 @@ public class SellerController {
 
     // Endpoint to delete an existing seller
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteSeller(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
-            sellerService.deleteSeller(id);
+            userService.deleteUser(id);
             return ResponseEntity.ok().build();
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

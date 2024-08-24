@@ -6,5 +6,7 @@ import com.vonnueAmazonClone.amazonClone.DTO.CategoryDto;
 public interface CategoryService {
      CategoryDto saveCategory(CategoryDto categoryDto);
      CategoryDto updateCategory(Long id, CategoryDto categoryDto);
+     void deleteCategory(Long id);
+
 
 }

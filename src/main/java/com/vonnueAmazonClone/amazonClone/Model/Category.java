@@ -17,6 +17,6 @@ public class Category {
     private byte[] image;
 
     @ManyToOne
-    @JoinColumn(name = "seller_id")
-    private Seller seller;
+    @JoinColumn(name = "admin_id")
+    private User adminId;
 }
