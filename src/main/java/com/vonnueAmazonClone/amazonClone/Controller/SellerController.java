@@ -30,8 +30,12 @@ public class SellerController {
             Seller savedSeller = sellerService.saveSeller(sellerDto);
             return new ResponseEntity<>(savedSeller, HttpStatus.CREATED);
         }catch (InvalidDetailException e) {
-            // Return an error response entity with the exception message
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -45,6 +49,11 @@ public class SellerController {
         }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+        catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // Endpoint to delete an existing seller
@@ -53,7 +62,10 @@ public class SellerController {
         try {
             sellerService.deleteSeller(id);
             return ResponseEntity.ok().build();
-        } catch (EntityNotFoundException e) {
+        }catch (InvalidDetailException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

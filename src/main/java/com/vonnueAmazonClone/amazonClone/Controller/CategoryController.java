@@ -27,8 +27,13 @@ public class CategoryController {
            try{
                CategoryDto savedCategory = categoryService.saveCategory(categoryDto);
                return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
-           }catch (  InvalidDetailException e) {
+           }catch (InvalidDetailException e) {
                return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+           }
+           catch (EntityNotFoundException e) {
+               return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+           } catch (Exception e) {
+               return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
            }
 
     }
@@ -43,6 +48,11 @@ public class CategoryController {
         } catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+        catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // Endpoint to delete an existing category
@@ -51,7 +61,10 @@ public class CategoryController {
         try {
             categoryService.deleteCategory(id);
             return ResponseEntity.ok().build();
-        } catch (EntityNotFoundException e) {
+        }catch (InvalidDetailException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

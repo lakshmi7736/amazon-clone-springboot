@@ -64,7 +64,7 @@ public class CategoryRequestServiceImpl implements CategoryRequestService {
             existingRequest.setStatus("REJECTED");
             categoryRequestRepository.save(existingRequest);
             return categoryRequestDto;
-        }).orElseThrow(() -> new RuntimeException("Category request not found."));
+        }).orElseThrow(() -> new InvalidDetailException("Category request not found."));
     }
 
     @Override

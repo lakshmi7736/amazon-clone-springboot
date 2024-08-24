@@ -26,8 +26,13 @@ public class SubCategoryController {
         try{
             SubCategoryDto savedSubCategory = subCategoryService.saveSubCategory(subCategoryDto);
             return new ResponseEntity<>(savedSubCategory, HttpStatus.CREATED);
-        }catch (  InvalidDetailException e) {
+        }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -39,8 +44,13 @@ public class SubCategoryController {
         try {
             SubCategoryDto updatedSubCategory = subCategoryService.updateSubCategory(id, subCategoryDto);
             return ResponseEntity.ok(updatedSubCategory);
-        } catch (InvalidDetailException e) {
+        }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -50,7 +60,10 @@ public class SubCategoryController {
         try {
             subCategoryService.deleteSubCategory(id);
             return ResponseEntity.ok().build();
-        } catch (EntityNotFoundException e) {
+        }catch (InvalidDetailException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
