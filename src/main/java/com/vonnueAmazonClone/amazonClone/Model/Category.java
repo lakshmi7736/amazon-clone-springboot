@@ -12,11 +12,4 @@ public class Category {
 
     private String name;
 
-    @Lob
-    @Column(columnDefinition = "LONGBLOB",length = Integer.MAX_VALUE)
-    private byte[] image;
-
-    @ManyToOne
-    @JoinColumn(name = "admin_id")
-    private User adminId;
 }

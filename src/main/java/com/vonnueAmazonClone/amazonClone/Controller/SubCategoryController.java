@@ -4,6 +4,7 @@ import com.vonnueAmazonClone.amazonClone.DTO.SubCategoryDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
 import com.vonnueAmazonClone.amazonClone.Service.SubCategoryService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ public class SubCategoryController {
 
     private final SubCategoryService subCategoryService;
 
+    @Autowired
     public SubCategoryController(SubCategoryService subCategoryService) {
         this.subCategoryService = subCategoryService;
     }

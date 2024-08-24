@@ -8,7 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
 
 @Service
 public class CategoryServiceImpl implements CategoryService{
@@ -25,11 +24,6 @@ public class CategoryServiceImpl implements CategoryService{
         }
         Category category = new Category();
         category.setName(categoryDto.getName());
-        if (categoryDto.getImage() != null && !categoryDto.getImage().isEmpty()) {
-            // Directly set the decoded image on the entity
-            category.setImage(Base64.getDecoder().decode(categoryDto.getImage()));
-        }
-        category.setAdminId(categoryDto.getAdminId()); // Ensure the seller is managed and exists in the DB
         category = categoryRepository.save(category);
         categoryDto.setId(category.getId()); // Set the ID on the DTO from the saved entity
         return categoryDto;
@@ -45,11 +39,6 @@ public class CategoryServiceImpl implements CategoryService{
                 }
             }
             existingCategory.setName(categoryDto.getName());
-            if (categoryDto.getImage() != null && !categoryDto.getImage().isEmpty()) {
-                // Directly set the decoded image on the entity
-                existingCategory.setImage(Base64.getDecoder().decode(categoryDto.getImage()));
-            }
-            existingCategory.setAdminId(categoryDto.getAdminId()); // Handle seller updates appropriately
             categoryRepository.save(existingCategory);
             return categoryDto;
         }).orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
@@ -63,6 +52,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
 
+    @Override
     public Category findByCategoryName(String name) {
 
         return categoryRepository.findByName(name);
