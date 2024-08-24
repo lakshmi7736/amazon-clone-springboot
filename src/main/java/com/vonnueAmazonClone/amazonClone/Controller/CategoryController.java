@@ -2,7 +2,6 @@ package com.vonnueAmazonClone.amazonClone.Controller;
 
 import com.vonnueAmazonClone.amazonClone.DTO.CategoryDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
-import com.vonnueAmazonClone.amazonClone.Model.User;
 import com.vonnueAmazonClone.amazonClone.Service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    // Endpoint to create an existing category
+    // Endpoint to create a new category
     @PostMapping
     public ResponseEntity<?> createCategory(@RequestBody CategoryDto categoryDto) {
            try{
@@ -48,7 +47,7 @@ public class CategoryController {
 
     // Endpoint to delete an existing category
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteSeller(@PathVariable Long id) {
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
         try {
             categoryService.deleteCategory(id);
             return ResponseEntity.ok().build();
