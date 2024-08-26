@@ -1,6 +1,7 @@
 package com.vonnueAmazonClone.amazonClone.DTO;
 
 import com.vonnueAmazonClone.amazonClone.Model.Category;
+import com.vonnueAmazonClone.amazonClone.Model.Seller;
 import com.vonnueAmazonClone.amazonClone.Model.Subcategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,8 @@ public class ProductDto {
     private Category categoryId;
 
     private Subcategory subCategoryId;
+
+    private Seller seller;
 
     private double averageRating;
 }

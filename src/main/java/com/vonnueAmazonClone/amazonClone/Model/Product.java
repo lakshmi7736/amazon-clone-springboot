@@ -33,8 +33,10 @@ public class Product {
     @JoinColumn(name = "sub_category_id")
     private Subcategory subCategoryId;
 
+    @ManyToOne
+    private Seller seller;
 
-    @Transient // Mark this field as transient to exclude it from database mapping
+
     private double averageRating;
 
 }
