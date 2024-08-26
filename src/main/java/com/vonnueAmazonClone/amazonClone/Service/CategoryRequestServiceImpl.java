@@ -1,6 +1,5 @@
 package com.vonnueAmazonClone.amazonClone.Service;
 
-import com.vonnueAmazonClone.amazonClone.DTO.CategoryDto;
 import com.vonnueAmazonClone.amazonClone.DTO.CategoryRequestDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
 import com.vonnueAmazonClone.amazonClone.Model.Category;
@@ -28,11 +27,12 @@ public class CategoryRequestServiceImpl implements CategoryRequestService {
 
     @Override
     public CategoryRequestDto createCategoryRequest(CategoryRequestDto categoryRequestDto) {
+        CategoryRequest byName = categoryRequestRepository.findByName(categoryRequestDto.getSuggestedCategoryName());
         if (categoryService.findByCategoryName(categoryRequestDto.getSuggestedCategoryName()) != null) {
             throw new InvalidDetailException("category is already exist.");
         }
-        if(categoryRequestRepository.findByName(categoryRequestDto.getSuggestedCategoryName())!=null){
-            throw new InvalidDetailException("request already made.");
+        if(byName!=null){
+            throw new InvalidDetailException("request already made with status :"+ byName.getStatus());
         }
         CategoryRequest request = new CategoryRequest();
         request.setCreatedAt(LocalDateTime.now());
@@ -45,24 +45,39 @@ public class CategoryRequestServiceImpl implements CategoryRequestService {
         categoryRequestDto.setCreatedAt(request.getCreatedAt());
         return categoryRequestDto;
     }
-
     @Override
-    public CategoryRequestDto approveCategoryRequest(Long requestId,CategoryRequestDto categoryRequestDto) {
+    public CategoryRequestDto approveCategoryRequest(Long requestId, CategoryRequestDto categoryRequestDto) {
+        if (categoryService.findByCategoryName(categoryRequestDto.getSuggestedCategoryName()) != null) {
+            throw new InvalidDetailException("category is already exist.");
+        }
+//        CategoryRequest byName = categoryRequestRepository.findByName(categoryRequestDto.getSuggestedCategoryName());
+//        if(byName!=null && !byName.getStatus().equals("PENDING")){
+//            throw new InvalidDetailException("request already made with status :"+ byName.getStatus());
+//        }
         return categoryRequestRepository.findById(requestId).map(existingRequest->{
             existingRequest.setStatus("APPROVED");
             Category category= new Category();
             category.setName(existingRequest.getSuggestedCategoryName());
             categoryRepository.save(category);
             categoryRequestRepository.save(existingRequest);
+            categoryRequestDto.setStatus("APPROVED");
             return categoryRequestDto;
         }).orElseThrow(() -> new EntityNotFoundException("Category request not found with id: " + requestId));
     }
 
     @Override
     public CategoryRequestDto rejectCategoryRequest(Long requestId,CategoryRequestDto categoryRequestDto) {
+        if (categoryService.findByCategoryName(categoryRequestDto.getSuggestedCategoryName()) != null) {
+            throw new InvalidDetailException("category is already exist.");
+        }
+        CategoryRequest byName = categoryRequestRepository.findByName(categoryRequestDto.getSuggestedCategoryName());
+        if(byName!=null && !byName.getStatus().equals("PENDING")){
+            throw new InvalidDetailException("request already made with status :"+ byName.getStatus());
+        }
         return categoryRequestRepository.findById(requestId).map(existingRequest -> {
             existingRequest.setStatus("REJECTED");
             categoryRequestRepository.save(existingRequest);
+            categoryRequestDto.setStatus("REJECTED");
             return categoryRequestDto;
         }).orElseThrow(() -> new InvalidDetailException("Category request not found."));
     }

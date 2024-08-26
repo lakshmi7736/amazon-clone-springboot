@@ -11,7 +11,6 @@ public class Subcategory {
     private Long id;
 
     private String subCategoryName;
-
     @ManyToOne
     private Category categoryId;
 }

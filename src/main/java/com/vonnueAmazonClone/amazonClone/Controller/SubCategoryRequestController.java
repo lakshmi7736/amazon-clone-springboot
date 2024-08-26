@@ -1,29 +1,26 @@
 package com.vonnueAmazonClone.amazonClone.Controller;
 
-import com.vonnueAmazonClone.amazonClone.DTO.CategoryRequestDto;
+import com.vonnueAmazonClone.amazonClone.DTO.SubCategoryRequestDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
-import com.vonnueAmazonClone.amazonClone.Service.CategoryRequestService;
+import com.vonnueAmazonClone.amazonClone.Service.SubCategoryRequestService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/category-requests")
-public class CategoryRequestController {
-    private final CategoryRequestService categoryRequestService;
+@RequestMapping("/api/subcategory-requests")
+public class SubCategoryRequestController {
+    private final SubCategoryRequestService subCategoryRequestService;
 
-    @Autowired
-    public CategoryRequestController(CategoryRequestService categoryRequestService) {
-        this.categoryRequestService = categoryRequestService;
+    public SubCategoryRequestController(SubCategoryRequestService subCategoryRequestService) {
+        this.subCategoryRequestService = subCategoryRequestService;
     }
-
-    // Endpoint to create a new category request
+    // Endpoint to create a new sub category request
     @PostMapping
-    public ResponseEntity<?> createRequest(@RequestBody CategoryRequestDto categoryRequest) {
+    public ResponseEntity<?> createRequest(@RequestBody SubCategoryRequestDto subCategoryRequestDto) {
         try {
-            CategoryRequestDto savedRequest = categoryRequestService.createCategoryRequest(categoryRequest);
+            SubCategoryRequestDto savedRequest = subCategoryRequestService.createCategoryRequest(subCategoryRequestDto);
             return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
         }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -35,11 +32,11 @@ public class CategoryRequestController {
         }
     }
 
-    // Endpoint to approve an existing category request
+    // Endpoint to approve an existing sub category request
     @PatchMapping("/approve/{requestId}")
-    public ResponseEntity<?> approveRequest(@PathVariable Long requestId,@RequestBody CategoryRequestDto categoryRequest  ) {
+    public ResponseEntity<?> approveRequest(@PathVariable Long requestId,@RequestBody SubCategoryRequestDto subCategoryRequestDto  ) {
         try{
-            CategoryRequestDto approvedRequest = categoryRequestService.approveCategoryRequest(requestId,categoryRequest);
+            SubCategoryRequestDto approvedRequest = subCategoryRequestService.approveCategoryRequest(requestId,subCategoryRequestDto);
             return new ResponseEntity<>(approvedRequest, HttpStatus.OK);
         }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -53,9 +50,9 @@ public class CategoryRequestController {
 
     // Endpoint to reject an existing category request
     @PatchMapping("/reject/{requestId}")
-    public ResponseEntity<?> rejectRequest(@PathVariable Long requestId,@RequestBody CategoryRequestDto categoryRequestDto) {
+    public ResponseEntity<?> rejectRequest(@PathVariable Long requestId,@RequestBody SubCategoryRequestDto subCategoryRequestDto) {
         try{
-            CategoryRequestDto rejectedRequest = categoryRequestService.rejectCategoryRequest(requestId, categoryRequestDto);
+            SubCategoryRequestDto rejectedRequest = subCategoryRequestService.rejectCategoryRequest(requestId, subCategoryRequestDto);
             return new ResponseEntity<>(rejectedRequest, HttpStatus.OK);
         }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -66,4 +63,6 @@ public class CategoryRequestController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
+

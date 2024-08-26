@@ -1,6 +1,5 @@
 package com.vonnueAmazonClone.amazonClone.Repository;
 
-import com.vonnueAmazonClone.amazonClone.Model.Category;
 import com.vonnueAmazonClone.amazonClone.Model.CategoryRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

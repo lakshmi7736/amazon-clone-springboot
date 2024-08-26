@@ -7,11 +7,15 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-public class CategoryRequest {
+public class SubCategoryRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long requestId;
-    private String suggestedCategoryName;
+
+    private String suggestedSubCategoryName;
+    @ManyToOne
+    private Category category;
+
     private String status;
     @ManyToOne
     private Seller createdBy;

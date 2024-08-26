@@ -56,6 +56,7 @@ public class SubCategoryServiceImpl implements SubCategoryService{
 
     }
 
+    @Override
     public Subcategory findBySubCategoryName(String name) {
 
         return subCategoryRepository.findByName(name);
