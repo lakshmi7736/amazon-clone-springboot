@@ -73,7 +73,7 @@ public class SubCategoryController {
         }
     }
 
-
+    //to get SubcategoriesByCategory
     @GetMapping("/{categoryId}")
     public ResponseEntity<?>  getSubcategoriesByCategory(@PathVariable Long categoryId , @RequestParam(defaultValue = "0") int page) {
         try{

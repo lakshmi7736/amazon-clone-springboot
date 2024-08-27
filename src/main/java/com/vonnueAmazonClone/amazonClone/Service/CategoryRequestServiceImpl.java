@@ -82,11 +82,6 @@ public class CategoryRequestServiceImpl implements CategoryRequestService {
         }).orElseThrow(() -> new InvalidDetailException("Category request not found."));
     }
 
-    @Override
-    public CategoryRequest findByCategoryReqName(String name) {
-
-        return categoryRequestRepository.findByName(name);
-    }
 }
 
 

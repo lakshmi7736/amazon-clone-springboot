@@ -3,7 +3,6 @@ package com.vonnueAmazonClone.amazonClone.Controller;
 import com.vonnueAmazonClone.amazonClone.DTO.ProductDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
 import com.vonnueAmazonClone.amazonClone.Model.Product;
-import com.vonnueAmazonClone.amazonClone.Model.Subcategory;
 import com.vonnueAmazonClone.amazonClone.Service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -47,6 +46,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<Product>> getProductsByCriteria(
+            @RequestParam(required = false) String brand,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Long subCategoryId,
             @RequestParam(required = false) Boolean prime,
@@ -54,7 +54,7 @@ public class ProductController {
             @RequestParam(required = false) Boolean madeForAmazon,
             @RequestParam(defaultValue = "0") int page) {
         try {
-            List<Product> products = productService.getProductsByCriteria(categoryId,subCategoryId, page, prime, cod, madeForAmazon);
+            List<Product> products = productService.getProductsByCriteria(brand,categoryId,subCategoryId, page, prime, cod, madeForAmazon);
             return ResponseEntity.ok(products);
         } catch (InvalidDetailException e) {
             return ResponseEntity.badRequest().body(null);

@@ -135,10 +135,14 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> getProductsByCriteria(Long categoryId,Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon) {
+    public List<Product> getProductsByCriteria(String brand,Long categoryId,Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon) {
         PageRequest pageRequest = PageRequest.of(page, 20); // Example with fixed page size
 
         Specification<Product> spec = Specification.where(null);
+
+        if(brand !=null){
+            spec =spec.and(ProductSpecifications.hasBrand(brand));
+        }
 
         if(categoryId !=null){
             spec = spec.and(ProductSpecifications.hasCategoryId(categoryId));

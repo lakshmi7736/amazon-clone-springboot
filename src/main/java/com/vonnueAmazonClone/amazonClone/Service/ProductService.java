@@ -11,6 +11,6 @@ import java.util.List;
 public interface ProductService {
     void resizing(MultipartFile[] files) ;
     ProductDto processAndSaveProduct(ProductDto productDto, List<byte[]> imageDataList) throws Exception;
-    List<Product> getProductsByCriteria(Long categoryId,Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon) ;//    //    to get all products
+    List<Product> getProductsByCriteria(String brand,Long categoryId,Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon) ;//    //    to get all products
 
 }

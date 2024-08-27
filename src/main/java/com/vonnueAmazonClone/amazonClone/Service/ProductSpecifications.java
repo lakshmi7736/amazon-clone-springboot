@@ -14,7 +14,6 @@ public class ProductSpecifications {
     }
 
 
-
     public static Specification<Product> hasSubCategoryId(Long subCategoryId) {
         return (root, query, criteriaBuilder) -> {
             if (subCategoryId == null) {
@@ -22,6 +21,11 @@ public class ProductSpecifications {
             }
             return criteriaBuilder.equal(root.get("subCategoryId").get("id"), subCategoryId);
         };
+    }
+
+
+    public static Specification<Product> hasBrand(String  brand) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("brand"), brand);
     }
 
     public static Specification<Product> isPrime(boolean prime) {

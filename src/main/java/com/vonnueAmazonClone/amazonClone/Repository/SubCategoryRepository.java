@@ -13,5 +13,7 @@ public interface SubCategoryRepository extends JpaRepository<Subcategory,Long> {
     @Query("SELECT u FROM Subcategory u WHERE u.subCategoryName = :subCategoryName")
     Subcategory findByName(@Param("subCategoryName") String subCategoryName);
 
-    Page<Subcategory> findByCategoryId(Long categoryId, Pageable pageable );
+
+    @Query("SELECT u FROM Subcategory u WHERE u.categoryId.id = :categoryId")
+    Page<Subcategory> findByCategory(@Param("categoryId") Long categoryId, Pageable pageable );
 }

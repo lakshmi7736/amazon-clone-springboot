@@ -89,8 +89,4 @@ public class SubCategoryRequestServiceImpl implements SubCategoryRequestService{
         }).orElseThrow(() -> new InvalidDetailException("Category request not found."));
     }
 
-    @Override
-    public SubCategoryRequest findBySubCategoryReqName(String name) {
-        return subCategoryRequestRepository.findByName(name);
-    }
 }

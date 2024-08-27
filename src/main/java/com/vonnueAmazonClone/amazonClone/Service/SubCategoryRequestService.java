@@ -7,5 +7,4 @@ public interface SubCategoryRequestService {
     SubCategoryRequestDto createCategoryRequest(SubCategoryRequestDto subCategoryRequestDto);
     SubCategoryRequestDto approveCategoryRequest(Long requestId, SubCategoryRequestDto subCategoryRequestDto );
     SubCategoryRequestDto rejectCategoryRequest(Long requestId,SubCategoryRequestDto subCategoryRequestDto);
-    SubCategoryRequest findBySubCategoryReqName(String name);
 }

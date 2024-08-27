@@ -72,7 +72,7 @@ public class SubCategoryServiceImpl implements SubCategoryService{
     public List<Subcategory> getSubcategoriesByCategoryId(Long categoryId,int page) {
         int size = 20;
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Subcategory> subcategories=subCategoryRepository.findByCategoryId(categoryId,pageRequest);
+        Page<Subcategory> subcategories=subCategoryRepository.findByCategory(categoryId,pageRequest);
         if (subcategories.hasContent()) {
             return subcategories.getContent(); // Return the list of products
         }else {
