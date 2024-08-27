@@ -3,6 +3,7 @@ package com.vonnueAmazonClone.amazonClone.Controller;
 import com.vonnueAmazonClone.amazonClone.DTO.ProductDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
 import com.vonnueAmazonClone.amazonClone.Model.Product;
+import com.vonnueAmazonClone.amazonClone.Model.Subcategory;
 import com.vonnueAmazonClone.amazonClone.Service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -43,109 +44,25 @@ public class ProductController {
         }
     }
 
-    //to get all products
-    @GetMapping("/all-products")
-    public ResponseEntity<?> getAllProducts(
+
+    @GetMapping
+    public ResponseEntity<List<Product>> getProductsByCriteria(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long subCategoryId,
+            @RequestParam(required = false) Boolean prime,
+            @RequestParam(required = false) Boolean cod,
+            @RequestParam(required = false) Boolean madeForAmazon,
             @RequestParam(defaultValue = "0") int page) {
         try {
-            List<Product> products = productService.getAllProducts(page);
+            List<Product> products = productService.getProductsByCriteria(categoryId,subCategoryId, page, prime, cod, madeForAmazon);
             return ResponseEntity.ok(products);
-        }catch (InvalidDetailException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (InvalidDetailException e) {
+            return ResponseEntity.badRequest().body(null);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    //to get all products
-    @GetMapping("/all-products-by-category/{id}")
-    public ResponseEntity<?> getAllProductsByCategory(@PathVariable Long id,
-            @RequestParam(defaultValue = "0") int page) {
-        try {
-            List<Product> products = productService.getAllProductsByCategory(id,page);
-            return ResponseEntity.ok(products);
-        }catch (InvalidDetailException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    //to get all products
-    @GetMapping("/all-products-by-subcategory/{id}")
-    public ResponseEntity<?> getAllProductsBySubCategory(@PathVariable Long id,
-                                                      @RequestParam(defaultValue = "0") int page) {
-        try {
-            List<Product> products = productService.getAllProductsBySubCategory(id,page);
-            return ResponseEntity.ok(products);
-        }catch (InvalidDetailException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
 
-
-
-    //to get products of prime
-    @GetMapping("/prime-products")
-    public ResponseEntity<?> getPrimeProducts(
-            @RequestParam(defaultValue = "0") int page) {
-        try {
-            List<Product> products = productService.getPrimeProducts(page);
-            return ResponseEntity.ok(products);
-        }catch (InvalidDetailException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    //to get products of prime
-    @GetMapping("/madeForAmazon-products")
-    public ResponseEntity<?> getAmazonMadeProducts(
-            @RequestParam(defaultValue = "0") int page) {
-        try {
-            List<Product> products = productService.getMadeForAmazonProducts(page);
-            return ResponseEntity.ok(products);
-        }catch (InvalidDetailException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    //to get products of cod available
-    @GetMapping("/cod-products")
-    public ResponseEntity<?> getCodProducts(
-            @RequestParam(defaultValue = "0") int page) {
-        try {
-            List<Product> products = productService.getCodAvailable(page);
-            return ResponseEntity.ok(products);
-        }catch (InvalidDetailException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 
 }

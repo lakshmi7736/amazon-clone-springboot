@@ -4,11 +4,14 @@ import com.vonnueAmazonClone.amazonClone.DTO.ProductDto;
 import com.vonnueAmazonClone.amazonClone.Handle.ImageProcessingException;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
 import com.vonnueAmazonClone.amazonClone.Model.Product;
+import com.vonnueAmazonClone.amazonClone.Model.Subcategory;
 import com.vonnueAmazonClone.amazonClone.Repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.jpa.domain.Specification;
+
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -131,82 +134,34 @@ public class ProductServiceImpl implements ProductService{
         return resizedImage;
     }
 
-
-    //    to get all products
     @Override
-    public List<Product> getAllProducts(int page) {
-        int size=20;
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Product> pageResult = productRepository.findAll(pageRequest);
-        if(pageResult.hasContent()){
-            return pageResult.getContent();
-        }else {
+    public List<Product> getProductsByCriteria(Long categoryId,Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon) {
+        PageRequest pageRequest = PageRequest.of(page, 20); // Example with fixed page size
+
+        Specification<Product> spec = Specification.where(null);
+
+        if(categoryId !=null){
+            spec = spec.and(ProductSpecifications.hasCategoryId(categoryId));
+        }
+
+        if (subCategoryId != null) {
+            spec = spec.and(ProductSpecifications.hasSubCategoryId(subCategoryId));
+        }
+        if (prime != null) {
+            spec = spec.and(ProductSpecifications.isPrime(prime));
+        }
+        if (cod != null) {
+            spec = spec.and(ProductSpecifications.isCodAvailable(cod));
+        }
+        if (madeForAmazon != null) {
+            spec = spec.and(ProductSpecifications.isMadeForAmazon(madeForAmazon));
+        }
+
+        List<Product> products = productRepository.findAll(spec, pageRequest).getContent();
+        if (products.isEmpty()) {
             throw new InvalidDetailException("No items to display");
         }
-    }
-
-    //    to get all products by category
-    @Override
-    public List<Product> getAllProductsByCategory(Long categoryId,int page) {
-        int size=20;
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Product> pageResult = productRepository.findByCategoryId(categoryId,pageRequest);
-        if(pageResult.hasContent()){
-            return pageResult.getContent();
-        }else {
-            throw new InvalidDetailException("No items to display");
-        }
-    }
-
-    //    to get all products by category
-    @Override
-    public List<Product> getAllProductsBySubCategory(Long subCategoryId,int page) {
-        int size=20;
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Product> pageResult = productRepository.findBySubCategoryId(subCategoryId,pageRequest);
-        if(pageResult.hasContent()){
-            return pageResult.getContent();
-        }else {
-            throw new InvalidDetailException("No items to display");
-        }
-    }
-
-    //    to get product of prime
-    @Override
-    public List<Product> getPrimeProducts(int page) {
-        int size=20;
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Product> pageResult = productRepository.findByPrime(true, pageRequest);
-        if(pageResult.hasContent()){
-            return pageResult.getContent();
-        }else {
-            throw new InvalidDetailException("No items to display");
-        }
-    }
-
-    //    to get product of made for amazon
-    @Override
-    public List<Product> getMadeForAmazonProducts(int page) {
-        int size = 20;
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Product> pageResult = productRepository.findByMadeForAmazon(true, pageRequest);
-        if (pageResult.hasContent()) {
-            return pageResult.getContent(); // Return the list of products
-        }else {
-            throw new InvalidDetailException("No items to display");
-        }
-    }
-
-    @Override
-    public List<Product> getCodAvailable(int page) {
-        int size = 20;
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Product> pageResult = productRepository.findByCod(true, pageRequest);
-        if (pageResult.hasContent()) {
-            return pageResult.getContent(); // Return the list of products
-        }else {
-            throw new InvalidDetailException("No items to display");
-        }
+        return products;
     }
 
 
