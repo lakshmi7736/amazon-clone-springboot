@@ -2,8 +2,11 @@ package com.vonnueAmazonClone.amazonClone.Service;
 
 import com.vonnueAmazonClone.amazonClone.DTO.ProductDto;
 import com.vonnueAmazonClone.amazonClone.Handle.ImageProcessingException;
+import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
 import com.vonnueAmazonClone.amazonClone.Model.Product;
 import com.vonnueAmazonClone.amazonClone.Repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,7 +36,14 @@ public class ProductServiceImpl implements ProductService{
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
+        product.setBrand(productDto.getBrand());
         product.setImageBlob(imageBlob);
+
+        product.setCod(productDto.isCod());
+        product.setPrime(productDto.isPrime());
+        product.setMadeForAmazon(productDto.isMadeForAmazon());
+
+
         product.setCategoryId(productDto.getCategoryId());
         product.setSubCategoryId(productDto.getSubCategoryId());
         product.setSeller(productDto.getSeller());
@@ -44,9 +54,9 @@ public class ProductServiceImpl implements ProductService{
         return productDto;
     }
 
+
     @Override
     public void resizing(MultipartFile[] files) {
-        System.out.println("Hey I reached resizing service");
         List<byte[]> imageDataList = new ArrayList<>();
         final long MAX_IMAGE_SIZE = 1 * 1024 * 1024; // 1 MB in bytes
 
@@ -57,7 +67,6 @@ public class ProductServiceImpl implements ProductService{
                 }
 
                 try {
-                    System.out.println("Hey I trying for resizeAndAddImage");
                     resizeAndAddImage(imageDataList, file);
                 } catch (Exception e) {
                     // Correctly instantiate and throw your custom exception
@@ -69,7 +78,6 @@ public class ProductServiceImpl implements ProductService{
 
 
     private void resizeAndAddImage(List<byte[]> imageDataList, MultipartFile file) throws IOException {
-        System.out.println("Hey I reached resizeAndAddImage");
         BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
         int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
 
@@ -98,7 +106,6 @@ public class ProductServiceImpl implements ProductService{
     }
 
     private BufferedImage resizeImage(BufferedImage originalImage, int type, int maxWidth, int maxHeight) {
-        System.out.println("hey I reached resizeImage");
         int width = originalImage.getWidth();
         int height = originalImage.getHeight();
 
@@ -122,6 +129,84 @@ public class ProductServiceImpl implements ProductService{
         g.dispose();
 
         return resizedImage;
+    }
+
+
+    //    to get all products
+    @Override
+    public List<Product> getAllProducts(int page) {
+        int size=20;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Product> pageResult = productRepository.findAll(pageRequest);
+        if(pageResult.hasContent()){
+            return pageResult.getContent();
+        }else {
+            throw new InvalidDetailException("No items to display");
+        }
+    }
+
+    //    to get all products by category
+    @Override
+    public List<Product> getAllProductsByCategory(Long categoryId,int page) {
+        int size=20;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Product> pageResult = productRepository.findByCategoryId(categoryId,pageRequest);
+        if(pageResult.hasContent()){
+            return pageResult.getContent();
+        }else {
+            throw new InvalidDetailException("No items to display");
+        }
+    }
+
+    //    to get all products by category
+    @Override
+    public List<Product> getAllProductsBySubCategory(Long subCategoryId,int page) {
+        int size=20;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Product> pageResult = productRepository.findBySubCategoryId(subCategoryId,pageRequest);
+        if(pageResult.hasContent()){
+            return pageResult.getContent();
+        }else {
+            throw new InvalidDetailException("No items to display");
+        }
+    }
+
+    //    to get product of prime
+    @Override
+    public List<Product> getPrimeProducts(int page) {
+        int size=20;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Product> pageResult = productRepository.findByPrime(true, pageRequest);
+        if(pageResult.hasContent()){
+            return pageResult.getContent();
+        }else {
+            throw new InvalidDetailException("No items to display");
+        }
+    }
+
+    //    to get product of made for amazon
+    @Override
+    public List<Product> getMadeForAmazonProducts(int page) {
+        int size = 20;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Product> pageResult = productRepository.findByMadeForAmazon(true, pageRequest);
+        if (pageResult.hasContent()) {
+            return pageResult.getContent(); // Return the list of products
+        }else {
+            throw new InvalidDetailException("No items to display");
+        }
+    }
+
+    @Override
+    public List<Product> getCodAvailable(int page) {
+        int size = 20;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Product> pageResult = productRepository.findByCod(true, pageRequest);
+        if (pageResult.hasContent()) {
+            return pageResult.getContent(); // Return the list of products
+        }else {
+            throw new InvalidDetailException("No items to display");
+        }
     }
 
 

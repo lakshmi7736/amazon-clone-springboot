@@ -7,6 +7,14 @@ import java.math.BigDecimal;
 
 @Entity
 @Data
+@Table(name = "products", indexes = {
+        @Index(name = "idx_seller_id", columnList = "seller_id"),
+        @Index(name = "idx_category_subcategory", columnList = "category_id, sub_category_id"),
+        @Index(name = "idx_price", columnList = "price"),
+        @Index(name = "idx_is_prime", columnList = "prime"),
+        @Index(name = "idx_is_cod_available", columnList = "cod"),
+        @Index(name="idx_is_made_for_amazon", columnList = "made_for_amazon")
+})
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,13 +25,19 @@ public class Product {
     @Column(name = "description", length = 1000)
     private String description;
 
-
     private BigDecimal price;
+
+    private String brand;
+
+    private boolean prime;
+
+    private boolean cod;
+
+    private boolean madeForAmazon;
 
     @Lob
     @Column(columnDefinition = "LONGBLOB",name ="image_blob",length = Integer.MAX_VALUE)
     private byte[] imageBlob;
-
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -35,7 +49,6 @@ public class Product {
 
     @ManyToOne
     private Seller seller;
-
 
     private double averageRating;
 

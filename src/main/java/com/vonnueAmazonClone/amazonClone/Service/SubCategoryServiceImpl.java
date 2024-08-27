@@ -2,11 +2,16 @@ package com.vonnueAmazonClone.amazonClone.Service;
 
 import com.vonnueAmazonClone.amazonClone.DTO.SubCategoryDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
+import com.vonnueAmazonClone.amazonClone.Model.Category;
 import com.vonnueAmazonClone.amazonClone.Model.Subcategory;
 import com.vonnueAmazonClone.amazonClone.Repository.SubCategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -61,4 +66,19 @@ public class SubCategoryServiceImpl implements SubCategoryService{
 
         return subCategoryRepository.findByName(name);
     }
+
+    //to get subcategories of a category by category id
+    @Override
+    public List<Subcategory> getSubcategoriesByCategoryId(Long categoryId,int page) {
+        int size = 20;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Subcategory> subcategories=subCategoryRepository.findByCategoryId(categoryId,pageRequest);
+        if (subcategories.hasContent()) {
+            return subcategories.getContent(); // Return the list of products
+        }else {
+            throw new InvalidDetailException("No items to display");
+        }
+    }
+
+
 }

@@ -6,7 +6,11 @@ import com.vonnueAmazonClone.amazonClone.Model.Category;
 import com.vonnueAmazonClone.amazonClone.Repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -57,4 +61,19 @@ public class CategoryServiceImpl implements CategoryService{
 
         return categoryRepository.findByName(name);
     }
+
+    @Override
+    public List<Category> getAllCategories(int page) {
+        int size = 6;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Category> pageResult = categoryRepository.findAll(pageRequest);
+        if (pageResult.hasContent()) {
+            return pageResult.getContent(); // Return the list of products
+        }else {
+            throw new InvalidDetailException("No items to display");
+        }
+    }
+
+
+
 }

@@ -24,6 +24,13 @@ public class ProductDto {
 
     private byte[] imageBlob;
 
+    private String brand;
+
+    private boolean prime;
+
+    private boolean cod;
+
+    private boolean madeForAmazon;
 
     private Category categoryId;
 

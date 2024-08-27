@@ -2,12 +2,15 @@ package com.vonnueAmazonClone.amazonClone.Controller;
 
 import com.vonnueAmazonClone.amazonClone.DTO.SubCategoryDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
+import com.vonnueAmazonClone.amazonClone.Model.Subcategory;
 import com.vonnueAmazonClone.amazonClone.Service.SubCategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/subCategories")
@@ -60,6 +63,22 @@ public class SubCategoryController {
         try {
             subCategoryService.deleteSubCategory(id);
             return ResponseEntity.ok().build();
+        }catch (InvalidDetailException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<?>  getSubcategoriesByCategory(@PathVariable Long categoryId , @RequestParam(defaultValue = "0") int page) {
+        try{
+            List<Subcategory> subcategories=subCategoryService.getSubcategoriesByCategoryId(categoryId,page);
+            return ResponseEntity.ok(subcategories);
         }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
