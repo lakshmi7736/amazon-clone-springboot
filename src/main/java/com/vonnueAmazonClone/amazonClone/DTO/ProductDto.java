@@ -38,5 +38,5 @@ public class ProductDto {
 
     private Seller seller;
 
-    private double averageRating;
+    private int averageRating;
 }

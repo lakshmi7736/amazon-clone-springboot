@@ -50,6 +50,6 @@ public class Product {
     @ManyToOne
     private Seller seller;
 
-    private double averageRating;
+    private int averageRating;
 
 }

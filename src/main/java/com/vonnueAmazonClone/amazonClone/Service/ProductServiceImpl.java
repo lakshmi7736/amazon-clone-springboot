@@ -19,6 +19,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,10 +136,18 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> getProductsByCriteria(String brand,Long categoryId,Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon) {
+    public List<Product> getProductsByCriteria(int averageRating, String seller, String brand, Long categoryId, Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon, BigDecimal minPrice , BigDecimal maxPrice) {
         PageRequest pageRequest = PageRequest.of(page, 20); // Example with fixed page size
 
         Specification<Product> spec = Specification.where(null);
+
+        if(seller !=null){
+            spec =spec.and(ProductSpecifications.hasSeller(seller));
+        }
+
+        if(averageRating!=0){
+            spec =spec.and(ProductSpecifications.hasRating(averageRating));
+        }
 
         if(brand !=null){
             spec =spec.and(ProductSpecifications.hasBrand(brand));
@@ -159,6 +168,13 @@ public class ProductServiceImpl implements ProductService{
         }
         if (madeForAmazon != null) {
             spec = spec.and(ProductSpecifications.isMadeForAmazon(madeForAmazon));
+        }
+        // Price filtering
+        if (minPrice != null && BigDecimal.ZERO.compareTo(minPrice) < 0) { // Checks if minPrice is greater than 0
+            spec = spec.and(ProductSpecifications.hasPriceGreaterThan(minPrice));
+        }
+        if (maxPrice != null && BigDecimal.ZERO.compareTo(maxPrice) < 0) { // Checks if maxPrice is greater than 0
+            spec = spec.and(ProductSpecifications.hasPriceLessThan(maxPrice));
         }
 
         List<Product> products = productRepository.findAll(spec, pageRequest).getContent();

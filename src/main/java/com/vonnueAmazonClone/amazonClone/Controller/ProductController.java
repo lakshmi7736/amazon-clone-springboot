@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,17 +45,22 @@ public class ProductController {
     }
 
 
+    //to get products based on filters
     @GetMapping
     public ResponseEntity<List<Product>> getProductsByCriteria(
+            @RequestParam(defaultValue = "0") int averageRating,
             @RequestParam(required = false) String brand,
+            @RequestParam(required = false) String seller,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Long subCategoryId,
             @RequestParam(required = false) Boolean prime,
             @RequestParam(required = false) Boolean cod,
             @RequestParam(required = false) Boolean madeForAmazon,
+            @RequestParam(defaultValue = "0") BigDecimal minPrice, // Added
+            @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(defaultValue = "0") int page) {
         try {
-            List<Product> products = productService.getProductsByCriteria(brand,categoryId,subCategoryId, page, prime, cod, madeForAmazon);
+            List<Product> products = productService.getProductsByCriteria(averageRating, seller, brand, categoryId, subCategoryId, page, prime, cod, madeForAmazon, minPrice, maxPrice);
             return ResponseEntity.ok(products);
         } catch (InvalidDetailException e) {
             return ResponseEntity.badRequest().body(null);
