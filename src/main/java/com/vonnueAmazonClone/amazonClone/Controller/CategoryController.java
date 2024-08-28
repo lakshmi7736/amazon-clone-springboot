@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api/admin/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -73,22 +73,7 @@ public class CategoryController {
         }
     }
 
-    // Endpoint to get all  existing category
-    @GetMapping("/all-categories")
-    public ResponseEntity<?> getAllCategories(
-            @RequestParam(defaultValue = "0") int page) {
-        try {
-            List<Category> categories = categoryService.getAllCategories(page);
-            return ResponseEntity.ok(categories);
-        }catch (InvalidDetailException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+
 
 
 }

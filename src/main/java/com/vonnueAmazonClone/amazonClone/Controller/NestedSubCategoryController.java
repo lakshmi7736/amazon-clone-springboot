@@ -2,6 +2,7 @@ package com.vonnueAmazonClone.amazonClone.Controller;
 
 import com.vonnueAmazonClone.amazonClone.DTO.NestedSubCategoryDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
+import com.vonnueAmazonClone.amazonClone.Model.Category;
 import com.vonnueAmazonClone.amazonClone.Model.NestedSubCategory;
 import com.vonnueAmazonClone.amazonClone.Service.NestedSubCategoryService;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/nestedSubCategories")
+@RequestMapping("/api/admin/nestedSubCategories")
 public class NestedSubCategoryController {
 
     private final NestedSubCategoryService nestedSubCategoryService;
@@ -72,20 +73,7 @@ public class NestedSubCategoryController {
         }
     }
 
-    //to get NestedSubcategories By SubCategory
-    @GetMapping("/{subCategoryId}")
-    public ResponseEntity<?>  getNestedSubcategoriesBySubCategory(@PathVariable Long subCategoryId , @RequestParam(defaultValue = "0") int page) {
-        try{
-            List<NestedSubCategory> nestedSubCategories=nestedSubCategoryService.getNestedSubcategoriesBySubCategoryId(subCategoryId,page);
-            return ResponseEntity.ok(nestedSubCategories);
-        }catch (InvalidDetailException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+
+
 
 }

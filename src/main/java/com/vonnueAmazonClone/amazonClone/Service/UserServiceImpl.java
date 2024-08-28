@@ -7,6 +7,7 @@ import com.vonnueAmazonClone.amazonClone.Repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,10 +16,13 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final Validation validation;
 
+    private final BCryptPasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, Validation validation) {
+    public UserServiceImpl(UserRepository userRepository, Validation validation, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.validation = validation;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -30,7 +34,8 @@ public class UserServiceImpl implements UserService{
         if (!validation.isValidEmail(userDto.getEmail())) {
             throw new InvalidDetailException("Invalid email format.");
         }
-
+        String pass= passwordEncoder.encode(userDto.getPassword());
+        userDto.setPassword(pass);
         User user = new User();
         // Copies all matching properties from sellerDto to seller no need of seller = new Seller(); seller.setId(sellerDto.getId());
         BeanUtils.copyProperties(userDto, user);

@@ -1,6 +1,5 @@
 package com.vonnueAmazonClone.amazonClone.DTO;
 
-import com.vonnueAmazonClone.amazonClone.Model.Category;
 import com.vonnueAmazonClone.amazonClone.Model.Subcategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;

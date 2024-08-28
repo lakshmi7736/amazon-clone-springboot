@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -26,13 +27,14 @@ public class ProductController {
     }
 
     //    create product
-    @PostMapping(value="/add", consumes = "multipart/form-data")
+    @PostMapping(value = "/add", consumes = "multipart/form-data")
     public ResponseEntity<?> createProduct(@ModelAttribute ProductDto productDto,
                                            @RequestParam(value = "files", required = false) MultipartFile[] files) {
         List<byte[]> imageDataList = new ArrayList<>();
-        productService.resizing(files);
-
         try {
+            if (files != null && files.length > 0) {
+                productService.resizeAndProcessImages(files, imageDataList);
+            }
             ProductDto savedProduct = productService.processAndSaveProduct(productDto, imageDataList);
             return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
         } catch (InvalidDetailException e) {
@@ -69,6 +71,21 @@ public class ProductController {
             return ResponseEntity.internalServerError().body(null);
         }
     }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+        try {
+            ProductDto productDto = productService.getProductDto(id);
+            return ResponseEntity.ok(productDto);
+        } catch (Exception e) {
+            // Log the error and return an appropriate response
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build(); // Consider more specific error handling
+        }
+    }
+
+
 
 
 

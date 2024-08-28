@@ -7,17 +7,23 @@ import com.vonnueAmazonClone.amazonClone.Repository.SellerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 
 @Service
 public class SellerServiceImpl implements SellerService {
+
+    private final BCryptPasswordEncoder passwordEncoder;
+
     private final Validation validation;
 
     private final SellerRepository sellerRepository;
 
     @Autowired
-    public SellerServiceImpl(Validation validation, SellerRepository sellerRepository) {
+    public SellerServiceImpl(BCryptPasswordEncoder passwordEncoder, Validation validation, SellerRepository sellerRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.validation = validation;
         this.sellerRepository = sellerRepository;
     }
@@ -34,9 +40,10 @@ public class SellerServiceImpl implements SellerService {
         if (!validation.isValidPhoneNumber(sellerDto.getPhoneNumber())) {
             throw new InvalidDetailException("Invalid phone number format.");
         }
-
+        String pass = passwordEncoder.encode(sellerDto.getPassword());
+        sellerDto.setPassword(pass);
         Seller seller = new Seller();
-        // Copies all matching properties from sellerDto to seller no need of seller = new Seller(); seller.setId(sellerDto.getId());
+        // Copies all matching properties from sellerDto to seller
         BeanUtils.copyProperties(sellerDto, seller);
 
         return sellerRepository.save(seller);

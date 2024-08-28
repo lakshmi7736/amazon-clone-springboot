@@ -1,14 +1,12 @@
 package com.vonnueAmazonClone.amazonClone.DTO;
 
-import com.vonnueAmazonClone.amazonClone.Model.Category;
-import com.vonnueAmazonClone.amazonClone.Model.NestedSubCategory;
-import com.vonnueAmazonClone.amazonClone.Model.Seller;
-import com.vonnueAmazonClone.amazonClone.Model.Subcategory;
+import com.vonnueAmazonClone.amazonClone.Model.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,7 +21,6 @@ public class ProductDto {
 
     private BigDecimal price;
 
-    private byte[] imageBlob;
 
     private String brand;
 
@@ -42,4 +39,6 @@ public class ProductDto {
     private Seller seller;
 
     private int averageRating;
+
+
 }

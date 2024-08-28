@@ -23,4 +23,6 @@ public class Seller {
     private String role= "SELLER_ROLE";
 
     private String bankAccountNumber;
+
+    private String password;
 }

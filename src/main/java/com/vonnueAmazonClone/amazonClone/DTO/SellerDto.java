@@ -21,4 +21,7 @@ public class SellerDto {
     private String pan_card;
 
     private String bankAccountNumber;
+
+    private String password;
+
 }

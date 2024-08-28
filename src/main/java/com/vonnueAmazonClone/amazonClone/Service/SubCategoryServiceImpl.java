@@ -66,6 +66,20 @@ public class SubCategoryServiceImpl implements SubCategoryService{
 
     }
 
+// to get all subcategories
+    @Override
+    public List<Subcategory> getAllSubCategories(int page) {
+        int size = 6;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Subcategory> pageResult = subCategoryRepository.findAll(pageRequest);
+        if (pageResult.hasContent()) {
+            return pageResult.getContent(); // Return the list of products
+        }else {
+            throw new InvalidDetailException("No items to display");
+        }
+    }
+
+
 
 
     //to get subcategories of a category by category id

@@ -19,7 +19,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.vonnueAmazonClone.amazonClone.Service.imageProcessing.deserializeImageBlob;
+import static com.vonnueAmazonClone.amazonClone.Service.imageProcessing.serializeImageList;
 
 
 @Service
@@ -30,6 +36,8 @@ public class ProductServiceImpl implements ProductService{
     public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
+
+
 
     @Override
     public ProductDto processAndSaveProduct(ProductDto productDto, List<byte[]> imageDataList) throws Exception {
@@ -53,59 +61,34 @@ public class ProductServiceImpl implements ProductService{
         product.setAverageRating(productDto.getAverageRating());
         productRepository.save(product);
         productDto.setId(product.getId());
-        productDto.setImageBlob(product.getImageBlob());
         return productDto;
     }
 
 
-    @Override
-    public void resizing(MultipartFile[] files) {
-        List<byte[]> imageDataList = new ArrayList<>();
+
+    public void resizeAndProcessImages(MultipartFile[] files, List<byte[]> imageDataList) throws IOException {
         final long MAX_IMAGE_SIZE = 1 * 1024 * 1024; // 1 MB in bytes
 
         for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                if (file.getSize() > MAX_IMAGE_SIZE) {
-                    throw new ImageProcessingException("File size is greater than 1 MB");
-                }
-
-                try {
-                    resizeAndAddImage(imageDataList, file);
-                } catch (Exception e) {
-                    // Correctly instantiate and throw your custom exception
-                    throw new ImageProcessingException("Error processing image", e);
-                }
+            if (!file.isEmpty() && file.getSize() > MAX_IMAGE_SIZE) {
+                throw new RuntimeException("File size is greater than 1 MB"); // Consider a more specific exception
             }
+
+            BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
+            int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+            BufferedImage resizedImage = resizeImage(originalImage, type, 800, 800); // maxWidth, maxHeight
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            String formatName = getFormatName(file.getContentType());
+            ImageIO.write(resizedImage, formatName, baos);
+            imageDataList.add(baos.toByteArray());
         }
     }
 
-
-    private void resizeAndAddImage(List<byte[]> imageDataList, MultipartFile file) throws IOException {
-        BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
-        int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
-
-        int maxWidth = 800; // Adjust the maximum width as needed
-        int maxHeight = 800; // Adjust the maximum height as needed
-
-        BufferedImage resizedImage = resizeImage(originalImage, type, maxWidth, maxHeight);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        // Determine the output format based on the input file's content type
-        String formatName = "JPEG"; // Default format
-        if (file.getContentType() != null) {
-            if (file.getContentType().equals("image/png")) {
-                formatName = "PNG";
-            } else if (file.getContentType().equals("image/jpeg")) {
-                formatName = "JPEG";
-            }
-            else if (file.getContentType().equals("image/jpg")) {
-                formatName = "JPG";
-            }
-        }
-
-        ImageIO.write(resizedImage, formatName, baos); // Assuming the image format is JPEG
-        byte[] bytes = baos.toByteArray();
-
-        imageDataList.add(bytes);
+    private String getFormatName(String contentType) {
+        if ("image/png".equals(contentType)) return "PNG";
+        if ("image/jpeg".equals(contentType) || "image/jpg".equals(contentType)) return "JPEG";
+        return "JPEG"; // Default
     }
 
     private BufferedImage resizeImage(BufferedImage originalImage, int type, int maxWidth, int maxHeight) {
@@ -135,7 +118,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> getProductsByCriteria(Long nestedSubCategoryId,int averageRating, String seller, String brand, Long categoryId, Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon, BigDecimal minPrice , BigDecimal maxPrice) {
+    public List<Product> getProductsByCriteria(Long nestedSubCategoryId,int averageRating, String seller, String brand, Long categoryId, Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon, BigDecimal minPrice , BigDecimal maxPrice) throws IOException, ClassNotFoundException {
         PageRequest pageRequest = PageRequest.of(page, 20); // Example with fixed page size
 
         Specification<Product> spec = Specification.where(null);
@@ -180,11 +163,9 @@ public class ProductServiceImpl implements ProductService{
         }
 
         List<Product> products = productRepository.findAll(spec, pageRequest).getContent();
-        if (products.isEmpty()) {
-            throw new InvalidDetailException("No items to display");
-        }
+
+
         return products;
     }
-
 
 }

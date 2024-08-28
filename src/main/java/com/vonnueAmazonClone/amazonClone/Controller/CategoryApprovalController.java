@@ -2,35 +2,30 @@ package com.vonnueAmazonClone.amazonClone.Controller;
 
 import com.vonnueAmazonClone.amazonClone.DTO.CategoryRequestDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
-import com.vonnueAmazonClone.amazonClone.Model.Category;
 import com.vonnueAmazonClone.amazonClone.Service.CategoryRequestService;
-import com.vonnueAmazonClone.amazonClone.Service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/category-requests")
-public class CategoryRequestController {
+@RequestMapping("/api/admin/category-requests")
+public class CategoryApprovalController {
+
     private final CategoryRequestService categoryRequestService;
-    private final CategoryService categoryService;
 
     @Autowired
-    public CategoryRequestController(CategoryRequestService categoryRequestService, CategoryService categoryService) {
+    public CategoryApprovalController(CategoryRequestService categoryRequestService) {
         this.categoryRequestService = categoryRequestService;
-        this.categoryService = categoryService;
     }
 
-    // Endpoint to create a new category request
-    @PostMapping
-    public ResponseEntity<?> createRequest(@RequestBody CategoryRequestDto categoryRequest) {
-        try {
-            CategoryRequestDto savedRequest = categoryRequestService.createCategoryRequest(categoryRequest);
-            return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
+    // Endpoint to approve an existing category request
+    @PatchMapping("/approve/{requestId}")
+    public ResponseEntity<?> approveRequest(@PathVariable Long requestId, @RequestBody CategoryRequestDto categoryRequest  ) {
+        try{
+            CategoryRequestDto approvedRequest = categoryRequestService.approveCategoryRequest(requestId,categoryRequest);
+            return new ResponseEntity<>(approvedRequest, HttpStatus.OK);
         }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -41,13 +36,12 @@ public class CategoryRequestController {
         }
     }
 
-    // Endpoint to get all  existing category
-    @GetMapping("/all-categories")
-    public ResponseEntity<?> getAllCategories(
-            @RequestParam(defaultValue = "0") int page) {
-        try {
-            List<Category> categories = categoryService.getAllCategories(page);
-            return ResponseEntity.ok(categories);
+    // Endpoint to reject an existing category request
+    @PatchMapping("/reject/{requestId}")
+    public ResponseEntity<?> rejectRequest(@PathVariable Long requestId,@RequestBody CategoryRequestDto categoryRequestDto) {
+        try{
+            CategoryRequestDto rejectedRequest = categoryRequestService.rejectCategoryRequest(requestId, categoryRequestDto);
+            return new ResponseEntity<>(rejectedRequest, HttpStatus.OK);
         }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

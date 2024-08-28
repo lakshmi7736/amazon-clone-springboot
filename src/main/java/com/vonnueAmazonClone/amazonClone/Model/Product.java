@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Data
@@ -38,6 +39,7 @@ public class Product {
     @Lob
     @Column(columnDefinition = "LONGBLOB",name ="image_blob",length = Integer.MAX_VALUE)
     private byte[] imageBlob;
+
 
     @ManyToOne
     @JoinColumn(name = "category_id")

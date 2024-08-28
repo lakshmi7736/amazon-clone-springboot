@@ -3,6 +3,7 @@ package com.vonnueAmazonClone.amazonClone.Service;
 import com.vonnueAmazonClone.amazonClone.DTO.NestedSubCategoryDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
 import com.vonnueAmazonClone.amazonClone.Model.NestedSubCategory;
+import com.vonnueAmazonClone.amazonClone.Model.Subcategory;
 import com.vonnueAmazonClone.amazonClone.Repository.NestedSubCategoryRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -62,6 +63,19 @@ public class NestedSubCategoryServiceImpl implements NestedSubCategoryService{
 
     }
 
+
+    // to get all nested-subcategories
+    @Override
+    public List<NestedSubCategory> getAllNestedSubCategories(int page) {
+        int size = 6;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<NestedSubCategory> pageResult = nestedSubCategoryRepository.findAll(pageRequest);
+        if (pageResult.hasContent()) {
+            return pageResult.getContent(); // Return the list of products
+        }else {
+            throw new InvalidDetailException("No items to display");
+        }
+    }
 
 
     //to get nested-subcategories of a subcategory by subcategory id
