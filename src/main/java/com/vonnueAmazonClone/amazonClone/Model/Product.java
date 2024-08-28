@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Data
 @Table(name = "products", indexes = {
         @Index(name = "idx_seller_id", columnList = "seller_id"),
-        @Index(name = "idx_category_subcategory", columnList = "category_id, sub_category_id"),
+        @Index(name = "idx_category_subcategory_nestedSubCategory", columnList = "category_id, sub_category_id, nested_sub_category_id"),
         @Index(name = "idx_price", columnList = "price"),
         @Index(name = "idx_is_prime", columnList = "prime"),
         @Index(name = "idx_is_cod_available", columnList = "cod"),
@@ -46,6 +46,10 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "sub_category_id")
     private Subcategory subCategoryId;
+
+    @ManyToOne
+    @JoinColumn(name = "nested_sub_category_id")
+    private NestedSubCategory nestedSubCategoryId;
 
     @ManyToOne
     private Seller seller;

@@ -25,6 +25,15 @@ public class ProductSpecifications {
         };
     }
 
+    public static Specification<Product> hasNestedSubCategoryId(Long nestedSubCategoryId) {
+        return (root, query, criteriaBuilder) -> {
+            if (nestedSubCategoryId == null) {
+                return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
+            }
+            return criteriaBuilder.equal(root.get("subCategoryId").get("id"), nestedSubCategoryId);
+        };
+    }
+
     public static Specification<Product> hasSeller(String seller) {
         return (root, query, criteriaBuilder) -> {
             if (seller == null) {

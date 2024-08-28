@@ -37,6 +37,11 @@ public class SubCategoryServiceImpl implements SubCategoryService{
         return subCategoryDto;
     }
 
+    @Override
+    public Subcategory findBySubCategoryName(String name) {
+
+        return subCategoryRepository.findByName(name);
+    }
 
     @Override
     public SubCategoryDto updateSubCategory(Long id, SubCategoryDto subCategoryDto) {
@@ -61,11 +66,7 @@ public class SubCategoryServiceImpl implements SubCategoryService{
 
     }
 
-    @Override
-    public Subcategory findBySubCategoryName(String name) {
 
-        return subCategoryRepository.findByName(name);
-    }
 
     //to get subcategories of a category by category id
     @Override

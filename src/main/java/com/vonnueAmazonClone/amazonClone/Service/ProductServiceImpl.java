@@ -134,7 +134,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> getProductsByCriteria(int averageRating, String seller, String brand, Long categoryId, Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon, BigDecimal minPrice , BigDecimal maxPrice) {
+    public List<Product> getProductsByCriteria(Long nestedSubCategoryId,int averageRating, String seller, String brand, Long categoryId, Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon, BigDecimal minPrice , BigDecimal maxPrice) {
         PageRequest pageRequest = PageRequest.of(page, 20); // Example with fixed page size
 
         Specification<Product> spec = Specification.where(null);
@@ -157,6 +157,9 @@ public class ProductServiceImpl implements ProductService{
 
         if (subCategoryId != null) {
             spec = spec.and(ProductSpecifications.hasSubCategoryId(subCategoryId));
+        }
+        if (nestedSubCategoryId != null) {
+            spec = spec.and(ProductSpecifications.hasNestedSubCategoryId(nestedSubCategoryId));
         }
         if (prime != null) {
             spec = spec.and(ProductSpecifications.isPrime(prime));

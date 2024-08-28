@@ -1,11 +1,10 @@
 package com.vonnueAmazonClone.amazonClone.Controller;
 
-import com.vonnueAmazonClone.amazonClone.DTO.SubCategoryDto;
+import com.vonnueAmazonClone.amazonClone.DTO.NestedSubCategoryDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
-import com.vonnueAmazonClone.amazonClone.Model.Subcategory;
-import com.vonnueAmazonClone.amazonClone.Service.SubCategoryService;
+import com.vonnueAmazonClone.amazonClone.Model.NestedSubCategory;
+import com.vonnueAmazonClone.amazonClone.Service.NestedSubCategoryService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,22 +12,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/subCategories")
-public class SubCategoryController {
+@RequestMapping("/api/nestedSubCategories")
+public class NestedSubCategoryController {
 
-    private final SubCategoryService subCategoryService;
+    private final NestedSubCategoryService nestedSubCategoryService;
 
-    @Autowired
-    public SubCategoryController(SubCategoryService subCategoryService) {
-        this.subCategoryService = subCategoryService;
+    public NestedSubCategoryController(NestedSubCategoryService nestedSubCategoryService) {
+        this.nestedSubCategoryService = nestedSubCategoryService;
     }
 
-    // Endpoint to create a new sub-category
+
+    // Endpoint to create a new nested-sub-category
     @PostMapping
-    public ResponseEntity<?> createSubCategory(@RequestBody SubCategoryDto subCategoryDto) {
+    public ResponseEntity<?> createNestedSubCategory(@RequestBody NestedSubCategoryDto nestedSubCategoryDto) {
         try{
-            SubCategoryDto savedSubCategory = subCategoryService.saveSubCategory(subCategoryDto);
-            return new ResponseEntity<>(savedSubCategory, HttpStatus.CREATED);
+            NestedSubCategoryDto saveNestedSubCategory = nestedSubCategoryService.saveNestedSubCategory(nestedSubCategoryDto);
+            return new ResponseEntity<>(saveNestedSubCategory, HttpStatus.CREATED);
         }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -41,12 +40,12 @@ public class SubCategoryController {
     }
 
 
-    // Endpoint to update an existing sub-category
+    // Endpoint to update an existing nested-sub-category
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateSubCategory(@PathVariable Long id, @RequestBody SubCategoryDto subCategoryDto) {
+    public ResponseEntity<?> updateNestedSubCategory(@PathVariable Long id, @RequestBody NestedSubCategoryDto nestedSubCategoryDto) {
         try {
-            SubCategoryDto updatedSubCategory = subCategoryService.updateSubCategory(id, subCategoryDto);
-            return ResponseEntity.ok(updatedSubCategory);
+            NestedSubCategoryDto updateNestedSubCategory = nestedSubCategoryService.updateNestedSubCategory(id, nestedSubCategoryDto);
+            return ResponseEntity.ok(updateNestedSubCategory);
         }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -57,11 +56,11 @@ public class SubCategoryController {
         }
     }
 
-    // Endpoint to delete an existing sub category
+    // Endpoint to delete an existing nested-sub-category
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteSubCategory(@PathVariable Long id) {
+    public ResponseEntity<?> deleteNestedSubCategory(@PathVariable Long id) {
         try {
-            subCategoryService.deleteSubCategory(id);
+            nestedSubCategoryService.deleteNestedSubCategory(id);
             return ResponseEntity.ok().build();
         }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -73,12 +72,12 @@ public class SubCategoryController {
         }
     }
 
-    //to get SubcategoriesByCategory
-    @GetMapping("/{categoryId}")
-    public ResponseEntity<?>  getSubcategoriesByCategory(@PathVariable Long categoryId , @RequestParam(defaultValue = "0") int page) {
+    //to get NestedSubcategories By SubCategory
+    @GetMapping("/{subCategoryId}")
+    public ResponseEntity<?>  getNestedSubcategoriesBySubCategory(@PathVariable Long subCategoryId , @RequestParam(defaultValue = "0") int page) {
         try{
-            List<Subcategory> subcategories=subCategoryService.getSubcategoriesByCategoryId(categoryId,page);
-            return ResponseEntity.ok(subcategories);
+            List<NestedSubCategory> nestedSubCategories=nestedSubCategoryService.getNestedSubcategoriesBySubCategoryId(subCategoryId,page);
+            return ResponseEntity.ok(nestedSubCategories);
         }catch (InvalidDetailException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

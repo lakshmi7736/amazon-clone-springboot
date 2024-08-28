@@ -13,6 +13,6 @@ public interface ProductService {
     void resizing(MultipartFile[] files) ;
     ProductDto processAndSaveProduct(ProductDto productDto, List<byte[]> imageDataList) throws Exception;
     //    //    to get all products with or without filters
-    List<Product> getProductsByCriteria(int averageRating, String seller, String brand, Long categoryId, Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon, BigDecimal minPrice ,BigDecimal maxPrice) ;
+    List<Product> getProductsByCriteria(Long nestedSubCategoryId,int averageRating, String seller, String brand, Long categoryId, Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon, BigDecimal minPrice ,BigDecimal maxPrice) ;
 
 }

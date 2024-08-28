@@ -53,6 +53,7 @@ public class ProductController {
             @RequestParam(required = false) String seller,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Long subCategoryId,
+            @RequestParam(required = false) Long nestedSubCategoryId,
             @RequestParam(required = false) Boolean prime,
             @RequestParam(required = false) Boolean cod,
             @RequestParam(required = false) Boolean madeForAmazon,
@@ -60,7 +61,7 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(defaultValue = "0") int page) {
         try {
-            List<Product> products = productService.getProductsByCriteria(averageRating, seller, brand, categoryId, subCategoryId, page, prime, cod, madeForAmazon, minPrice, maxPrice);
+            List<Product> products = productService.getProductsByCriteria(nestedSubCategoryId,averageRating, seller, brand, categoryId, subCategoryId, page, prime, cod, madeForAmazon, minPrice, maxPrice);
             return ResponseEntity.ok(products);
         } catch (InvalidDetailException e) {
             return ResponseEntity.badRequest().body(null);
