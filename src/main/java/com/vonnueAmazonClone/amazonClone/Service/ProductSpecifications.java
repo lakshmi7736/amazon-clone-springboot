@@ -30,7 +30,7 @@ public class ProductSpecifications {
             if (nestedSubCategoryId == null) {
                 return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
             }
-            return criteriaBuilder.equal(root.get("subCategoryId").get("id"), nestedSubCategoryId);
+            return criteriaBuilder.equal(root.get("nestedSubCategoryId").get("id"), nestedSubCategoryId);
         };
     }
 

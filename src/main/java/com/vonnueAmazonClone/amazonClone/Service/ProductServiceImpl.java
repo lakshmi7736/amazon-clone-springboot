@@ -48,6 +48,7 @@ public class ProductServiceImpl implements ProductService{
 
         product.setCategoryId(productDto.getCategoryId());
         product.setSubCategoryId(productDto.getSubCategoryId());
+        product.setNestedSubCategoryId(productDto.getNestedSubCategoryId());
         product.setSeller(productDto.getSeller());
         product.setAverageRating(productDto.getAverageRating());
         productRepository.save(product);

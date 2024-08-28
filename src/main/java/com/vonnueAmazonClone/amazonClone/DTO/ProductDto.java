@@ -1,6 +1,7 @@
 package com.vonnueAmazonClone.amazonClone.DTO;
 
 import com.vonnueAmazonClone.amazonClone.Model.Category;
+import com.vonnueAmazonClone.amazonClone.Model.NestedSubCategory;
 import com.vonnueAmazonClone.amazonClone.Model.Seller;
 import com.vonnueAmazonClone.amazonClone.Model.Subcategory;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,8 @@ public class ProductDto {
     private Category categoryId;
 
     private Subcategory subCategoryId;
+
+    private NestedSubCategory nestedSubCategoryId;
 
     private Seller seller;
 
