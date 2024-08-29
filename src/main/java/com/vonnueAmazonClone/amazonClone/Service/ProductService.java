@@ -2,7 +2,6 @@ package com.vonnueAmazonClone.amazonClone.Service;
 
 import com.vonnueAmazonClone.amazonClone.DTO.ProductDto;
 import com.vonnueAmazonClone.amazonClone.Model.Product;
-import com.vonnueAmazonClone.amazonClone.Model.Subcategory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -11,7 +10,8 @@ import java.util.List;
 
 
 public interface ProductService {
-
+     List<String> getAllUniqueBrands();
+    List<String> getAllUniqueSellers();
 
     void resizeAndProcessImages(List<byte[]> imageDataList, MultipartFile file) throws IOException;    ProductDto processAndSaveProduct(ProductDto productDto, List<byte[]> imageDataList) throws Exception;
     //    //    to get all products with or without filters
