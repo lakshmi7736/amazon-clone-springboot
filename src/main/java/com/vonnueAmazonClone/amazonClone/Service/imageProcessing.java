@@ -17,11 +17,19 @@ public interface imageProcessing {
     }
 
 
+    // This method deserializes a single byte[] blob into a List<byte[]> assuming
+// the blob contains serialized list of images
     static List<byte[]> deserializeImageBlob(byte[] imageBlob) throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(imageBlob))) {
             return (List<byte[]>) ois.readObject();
         }
     }
+
+//    static List<byte[]> deserializeImageBlob(byte[] imageBlob) throws IOException, ClassNotFoundException {
+//        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(imageBlob))) {
+//            return (List<byte[]>) ois.readObject();
+//        }
+//    }
 }
 
 

@@ -41,7 +41,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDto processAndSaveProduct(ProductDto productDto, List<byte[]> imageDataList) throws Exception {
-        byte[] imageBlob = imageProcessing.serializeImageList(imageDataList);
+        byte[] imageBlob = serializeImageList(imageDataList);
         Product product= new Product();
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
@@ -66,56 +66,46 @@ public class ProductServiceImpl implements ProductService{
 
 
 
-    public void resizeAndProcessImages(MultipartFile[] files, List<byte[]> imageDataList) throws IOException {
-        final long MAX_IMAGE_SIZE = 1 * 1024 * 1024; // 1 MB in bytes
-
-        for (MultipartFile file : files) {
-            if (!file.isEmpty() && file.getSize() > MAX_IMAGE_SIZE) {
-                throw new RuntimeException("File size is greater than 1 MB"); // Consider a more specific exception
-            }
-
+    @Override
+     public void resizeAndProcessImages(List<byte[]> imageDataList, MultipartFile file) throws IOException {
             BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
-            int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
-            BufferedImage resizedImage = resizeImage(originalImage, type, 800, 800); // maxWidth, maxHeight
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            String formatName = getFormatName(file.getContentType());
-            ImageIO.write(resizedImage, formatName, baos);
-            imageDataList.add(baos.toByteArray());
-        }
-    }
-
-    private String getFormatName(String contentType) {
-        if ("image/png".equals(contentType)) return "PNG";
-        if ("image/jpeg".equals(contentType) || "image/jpg".equals(contentType)) return "JPEG";
-        return "JPEG"; // Default
-    }
-
-    private BufferedImage resizeImage(BufferedImage originalImage, int type, int maxWidth, int maxHeight) {
-        int width = originalImage.getWidth();
-        int height = originalImage.getHeight();
-
-        if (width <= maxWidth && height <= maxHeight) {
-            return originalImage; // No resizing needed
+            int maxWidth = 800; // Adjust the maximum width as needed
+            int maxHeight = 800; // Adjust the maximum height as needed
+            // ... Image resizing logic (if required) ...
+            imageDataList.add(file.getBytes());
         }
 
-        // Compute new dimensions while preserving aspect ratio
-        double aspectRatio = (double) originalImage.getWidth() / originalImage.getHeight();
-        if (width > height) {
-            width = maxWidth;
-            height = (int) (maxWidth / aspectRatio);
-        } else {
-            height = maxHeight;
-            width = (int) (maxHeight * aspectRatio);
-        }
-
-        BufferedImage resizedImage = new BufferedImage(width, height, type);
-        Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(originalImage, 0, 0, width, height, null);
-        g.dispose();
-
-        return resizedImage;
-    }
+//    private String getFormatName(String contentType) {
+//        if ("image/png".equals(contentType)) return "PNG";
+//        if ("image/jpeg".equals(contentType) || "image/jpg".equals(contentType)) return "JPEG";
+//        return "JPEG"; // Default
+//    }
+//
+//    private BufferedImage resizeImage(BufferedImage originalImage, int type, int maxWidth, int maxHeight) {
+//        int width = originalImage.getWidth();
+//        int height = originalImage.getHeight();
+//
+//        if (width <= maxWidth && height <= maxHeight) {
+//            return originalImage; // No resizing needed
+//        }
+//
+//        // Compute new dimensions while preserving aspect ratio
+//        double aspectRatio = (double) originalImage.getWidth() / originalImage.getHeight();
+//        if (width > height) {
+//            width = maxWidth;
+//            height = (int) (maxWidth / aspectRatio);
+//        } else {
+//            height = maxHeight;
+//            width = (int) (maxHeight * aspectRatio);
+//        }
+//
+//        BufferedImage resizedImage = new BufferedImage(width, height, type);
+//        Graphics2D g = resizedImage.createGraphics();
+//        g.drawImage(originalImage, 0, 0, width, height, null);
+//        g.dispose();
+//
+//        return resizedImage;
+//    }
 
     @Override
     public List<Product> getProductsByCriteria(Long nestedSubCategoryId,int averageRating, String seller, String brand, Long categoryId, Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon, BigDecimal minPrice , BigDecimal maxPrice) throws IOException, ClassNotFoundException {
