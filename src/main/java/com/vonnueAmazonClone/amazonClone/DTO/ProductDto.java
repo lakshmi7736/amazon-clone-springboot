@@ -22,6 +22,8 @@ public class ProductDto {
     private BigDecimal price;
 
 
+    private byte[] imageBlob;
+
     private String brand;
 
     private boolean prime;

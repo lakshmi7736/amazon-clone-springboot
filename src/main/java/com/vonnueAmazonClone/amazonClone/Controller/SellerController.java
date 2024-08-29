@@ -1,6 +1,7 @@
 package com.vonnueAmazonClone.amazonClone.Controller;
 
 import com.vonnueAmazonClone.amazonClone.DTO.SellerDto;
+import com.vonnueAmazonClone.amazonClone.DTO.SignInResponseDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
 import com.vonnueAmazonClone.amazonClone.Model.Seller;
 import com.vonnueAmazonClone.amazonClone.Service.SellerService;
@@ -57,7 +58,8 @@ public class SellerController {
             }
 
             if (passwordEncoder.matches(sellerDto.getPassword(), seller.getPassword())) {
-                return ResponseEntity.ok("Sign-in successful");
+                SignInResponseDto response=new SignInResponseDto("Sign-in successful", seller);
+                return ResponseEntity.ok(response);
             } else {
                 return new ResponseEntity<>("Invalid email or password", HttpStatus.UNAUTHORIZED);
             }

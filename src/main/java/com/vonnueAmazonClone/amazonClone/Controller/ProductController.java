@@ -7,6 +7,7 @@ import com.vonnueAmazonClone.amazonClone.Service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,13 +28,25 @@ public class ProductController {
     }
 
     //    create product
+
     @PostMapping(value = "/add", consumes = "multipart/form-data")
     public ResponseEntity<?> createProduct(@ModelAttribute ProductDto productDto,
                                            @RequestParam(value = "files", required = false) MultipartFile[] files) {
-        List<byte[]> imageDataList = new ArrayList<>();
         try {
+            // Check if seller is null
+            if (productDto.getSeller() == null) {
+                return new ResponseEntity<>("Seller information is required", HttpStatus.BAD_REQUEST);
+            }
+            if(files == null) {
+                return new ResponseEntity<>("product images required", HttpStatus.BAD_REQUEST);
+            }
+
+            List<byte[]> imageDataList = new ArrayList<>();
             if (files != null && files.length > 0) {
-                productService.resizeAndProcessImages(files, imageDataList);
+                for (MultipartFile file : files) {
+                    byte[] bytes = file.getBytes();
+                    imageDataList.add(bytes); // Assuming you have a method to process or just directly adding
+                }
             }
             ProductDto savedProduct = productService.processAndSaveProduct(productDto, imageDataList);
             return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
@@ -45,7 +58,6 @@ public class ProductController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     //to get products based on filters
     @GetMapping
@@ -71,22 +83,6 @@ public class ProductController {
             return ResponseEntity.internalServerError().body(null);
         }
     }
-
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
-        try {
-            ProductDto productDto = productService.getProductDto(id);
-            return ResponseEntity.ok(productDto);
-        } catch (Exception e) {
-            // Log the error and return an appropriate response
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build(); // Consider more specific error handling
-        }
-    }
-
-
-
 
 
 }
