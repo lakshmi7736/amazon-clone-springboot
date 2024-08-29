@@ -3,7 +3,6 @@ package com.vonnueAmazonClone.amazonClone.Controller;
 import com.vonnueAmazonClone.amazonClone.DTO.ProductDto;
 import com.vonnueAmazonClone.amazonClone.Handle.ImageProcessingException;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
-import com.vonnueAmazonClone.amazonClone.Model.Product;
 import com.vonnueAmazonClone.amazonClone.Service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -14,10 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
-import static com.vonnueAmazonClone.amazonClone.Service.imageProcessing.deserializeImageBlob;
 
 
 @RestController
@@ -31,7 +28,6 @@ public class ProductController {
     }
 
     //    create product
-
     @PostMapping(value = "/add", consumes = "multipart/form-data")
     public ResponseEntity<?> createProduct(@ModelAttribute ProductDto productDto,
                                            @RequestParam(value = "files", required = false) MultipartFile[] files) {

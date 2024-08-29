@@ -3,7 +3,9 @@ package com.vonnueAmazonClone.amazonClone.Controller;
 import com.vonnueAmazonClone.amazonClone.DTO.SellerDto;
 import com.vonnueAmazonClone.amazonClone.DTO.SignInResponseDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
+import com.vonnueAmazonClone.amazonClone.Model.Product;
 import com.vonnueAmazonClone.amazonClone.Model.Seller;
+import com.vonnueAmazonClone.amazonClone.Service.ProductService;
 import com.vonnueAmazonClone.amazonClone.Service.SellerService;
 
 import com.vonnueAmazonClone.amazonClone.Service.Validation;
@@ -14,19 +16,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/sellers")
 public class SellerController {
 
     private final SellerService sellerService;
+    private final ProductService productService;
     private final Validation validation;
 
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public SellerController(SellerService sellerService, Validation validation, BCryptPasswordEncoder passwordEncoder) {
+    public SellerController(SellerService sellerService, ProductService productService, Validation validation, BCryptPasswordEncoder passwordEncoder) {
         this.sellerService = sellerService;
+        this.productService = productService;
         this.validation = validation;
         this.passwordEncoder = passwordEncoder;
     }
@@ -99,4 +105,5 @@ public class SellerController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }

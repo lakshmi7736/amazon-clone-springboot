@@ -1,7 +1,6 @@
 package com.vonnueAmazonClone.amazonClone.Service;
 
 import com.vonnueAmazonClone.amazonClone.DTO.ProductDto;
-import com.vonnueAmazonClone.amazonClone.Handle.ImageProcessingException;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
 import com.vonnueAmazonClone.amazonClone.Model.Product;
 import com.vonnueAmazonClone.amazonClone.Repository.ProductRepository;
@@ -12,17 +11,14 @@ import org.springframework.data.jpa.domain.Specification;
 
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 import static com.vonnueAmazonClone.amazonClone.Service.imageProcessing.deserializeImageBlob;
 import static com.vonnueAmazonClone.amazonClone.Service.imageProcessing.serializeImageList;
@@ -139,5 +135,6 @@ public class ProductServiceImpl implements ProductService{
         }
         return productDTOs;
     }
+
 
 }
