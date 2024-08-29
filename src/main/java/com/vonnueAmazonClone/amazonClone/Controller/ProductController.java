@@ -85,29 +85,8 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(defaultValue = "0") int page) {
         try {
-            List<Product> products = productService.getProductsByCriteria(nestedSubCategoryId,averageRating, seller, brand, categoryId, subCategoryId, page, prime, cod, madeForAmazon, minPrice, maxPrice);
-            List<ProductDto> productDTOs = new ArrayList<>();
-            for (Product product : products) {
-                if (product.getImageBlob() != null) {
-                    try {
-                        List<byte[]> imageDataList = deserializeImageBlob(product.getImageBlob());
-                        if (!imageDataList.isEmpty()) {
-                            String encodedImage = Base64.getEncoder().encodeToString(imageDataList.get(0));
-                            productDTOs.add(new ProductDto(product, encodedImage));
-                        } else {
-                            // Handling empty image data list
-                            productDTOs.add(new ProductDto(product, null));
-                        }
-                    } catch (IOException | ClassNotFoundException e) {
-                        // Handling errors in image deserialization
-                        return ResponseEntity.badRequest().body("Error deserializing image for product ID: " + product.getId());
-                    }
-                } else {
-                    // Handling null image blob
-                    productDTOs.add(new ProductDto(product, null));
-                }
-            }
-            return ResponseEntity.ok(productDTOs);
+            List<ProductDto> products = productService.getProductsByCriteria(nestedSubCategoryId,averageRating, seller, brand, categoryId, subCategoryId, page, prime, cod, madeForAmazon, minPrice, maxPrice);
+            return ResponseEntity.ok(products);
         } catch (InvalidDetailException e) {
             return ResponseEntity.badRequest().body(null);
         } catch (Exception e) {

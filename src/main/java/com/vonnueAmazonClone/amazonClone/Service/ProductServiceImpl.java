@@ -75,40 +75,8 @@ public class ProductServiceImpl implements ProductService{
             imageDataList.add(file.getBytes());
         }
 
-//    private String getFormatName(String contentType) {
-//        if ("image/png".equals(contentType)) return "PNG";
-//        if ("image/jpeg".equals(contentType) || "image/jpg".equals(contentType)) return "JPEG";
-//        return "JPEG"; // Default
-//    }
-//
-//    private BufferedImage resizeImage(BufferedImage originalImage, int type, int maxWidth, int maxHeight) {
-//        int width = originalImage.getWidth();
-//        int height = originalImage.getHeight();
-//
-//        if (width <= maxWidth && height <= maxHeight) {
-//            return originalImage; // No resizing needed
-//        }
-//
-//        // Compute new dimensions while preserving aspect ratio
-//        double aspectRatio = (double) originalImage.getWidth() / originalImage.getHeight();
-//        if (width > height) {
-//            width = maxWidth;
-//            height = (int) (maxWidth / aspectRatio);
-//        } else {
-//            height = maxHeight;
-//            width = (int) (maxHeight * aspectRatio);
-//        }
-//
-//        BufferedImage resizedImage = new BufferedImage(width, height, type);
-//        Graphics2D g = resizedImage.createGraphics();
-//        g.drawImage(originalImage, 0, 0, width, height, null);
-//        g.dispose();
-//
-//        return resizedImage;
-//    }
-
     @Override
-    public List<Product> getProductsByCriteria(Long nestedSubCategoryId,int averageRating, String seller, String brand, Long categoryId, Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon, BigDecimal minPrice , BigDecimal maxPrice) throws IOException, ClassNotFoundException {
+    public List<ProductDto> getProductsByCriteria(Long nestedSubCategoryId,int averageRating, String seller, String brand, Long categoryId, Long subCategoryId, int page, Boolean prime, Boolean cod, Boolean madeForAmazon, BigDecimal minPrice , BigDecimal maxPrice) throws IOException, ClassNotFoundException {
         PageRequest pageRequest = PageRequest.of(page, 20); // Example with fixed page size
 
         Specification<Product> spec = Specification.where(null);
@@ -154,8 +122,22 @@ public class ProductServiceImpl implements ProductService{
 
         List<Product> products = productRepository.findAll(spec, pageRequest).getContent();
 
-
-        return products;
+        List<ProductDto> productDTOs = new ArrayList<>();
+        for (Product product : products) {
+            String encodedImage = null;
+            if (product.getImageBlob() != null) {
+                try {
+                    List<byte[]> imageDataList = deserializeImageBlob(product.getImageBlob());
+                    if (!imageDataList.isEmpty()) {
+                        encodedImage = Base64.getEncoder().encodeToString(imageDataList.get(0));
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    throw new InvalidDetailException("Error found can't fetch products.");
+                }
+            }
+            productDTOs.add(new ProductDto(product, encodedImage));
+        }
+        return productDTOs;
     }
 
 }
