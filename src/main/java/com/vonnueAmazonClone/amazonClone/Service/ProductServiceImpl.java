@@ -2,10 +2,8 @@ package com.vonnueAmazonClone.amazonClone.Service;
 
 import com.vonnueAmazonClone.amazonClone.DTO.ProductDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
-import com.vonnueAmazonClone.amazonClone.Model.Category;
 import com.vonnueAmazonClone.amazonClone.Model.Product;
 import com.vonnueAmazonClone.amazonClone.Repository.ProductRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -146,14 +144,6 @@ public class ProductServiceImpl implements ProductService{
             throw new InvalidDetailException("No brands to display");
         }
         return brands;
-    }
-    @Override
-    public List<String> getAllUniqueSellers(){
-        List<String> sellers = productRepository.findAllDistinctSellers();
-        if (sellers.isEmpty()) {
-            throw new InvalidDetailException("No brands to display");
-        }
-        return sellers;
     }
 
 

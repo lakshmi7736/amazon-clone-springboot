@@ -2,7 +2,6 @@ package com.vonnueAmazonClone.amazonClone.Controller;
 
 import com.vonnueAmazonClone.amazonClone.DTO.CategoryDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
-import com.vonnueAmazonClone.amazonClone.Model.Category;
 import com.vonnueAmazonClone.amazonClone.Service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

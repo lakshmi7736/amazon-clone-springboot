@@ -106,21 +106,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/all-sellers")
-    public ResponseEntity<?> getAllUniqueSellers(
-            @RequestParam(defaultValue = "0") int page) {
-        try {
-            List<String> sellers = productService.getAllUniqueSellers();
-            return ResponseEntity.ok(sellers);
-        }catch (InvalidDetailException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+
 
 
 

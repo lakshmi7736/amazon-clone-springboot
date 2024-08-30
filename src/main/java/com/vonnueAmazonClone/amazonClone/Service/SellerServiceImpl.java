@@ -2,12 +2,15 @@ package com.vonnueAmazonClone.amazonClone.Service;
 
 import com.vonnueAmazonClone.amazonClone.DTO.SellerDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
+import com.vonnueAmazonClone.amazonClone.Model.Category;
 import com.vonnueAmazonClone.amazonClone.Model.Seller;
 import com.vonnueAmazonClone.amazonClone.Repository.SellerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -85,6 +88,18 @@ public class SellerServiceImpl implements SellerService {
         Seller seller = sellerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Seller not found with id: " + id));
         sellerRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Seller> getAllSellers(int page) {
+        int size = 6;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Seller> pageResult = sellerRepository.findAll(pageRequest);
+        if (pageResult.hasContent()) {
+            return pageResult.getContent();
+        }else {
+            throw new InvalidDetailException("No items to display");
+        }
     }
 
 

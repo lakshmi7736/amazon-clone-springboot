@@ -2,15 +2,12 @@ package com.vonnueAmazonClone.amazonClone.Controller;
 
 import com.vonnueAmazonClone.amazonClone.DTO.NestedSubCategoryDto;
 import com.vonnueAmazonClone.amazonClone.Handle.InvalidDetailException;
-import com.vonnueAmazonClone.amazonClone.Model.Category;
-import com.vonnueAmazonClone.amazonClone.Model.NestedSubCategory;
 import com.vonnueAmazonClone.amazonClone.Service.NestedSubCategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/nestedSubCategories")
